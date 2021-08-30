@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "ES2017",
+        "module": "commonjs",
+        "lib": ["es6"],
+        "outDir": "dist",
+        "moduleResolution": "node",
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "preserveConstEnums": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "rootDirs": ["."],
+        "baseUrl": ".",
+        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
+    },
+    "include": ["src/**/*"]
+}

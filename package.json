@@ -1,0 +1,27 @@
+{
+    "name": "typeorm-code-generator",
+    "version": "1.0.0",
+    "description": "From SQL Statement to typeorm migration code in typescript",
+    "main": "dist/index.js",
+    "bin": {
+        "typeorm-generate": "./dist/index.js"
+    },
+    "scripts": {
+        "build": "tsc",
+        "start-dev": "ts-node src/index.ts",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "PT. Five Jack",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/node": "^16.7.6",
+        "@types/yargs": "^17.0.2",
+        "nodemon": "^2.0.12",
+        "ts-node": "^10.2.1",
+        "typescript": "^4.4.2"
+    },
+    "dependencies": {
+        "node-sql-parser": "^3.6.5",
+        "yargs": "^17.1.1"
+    }
+}
