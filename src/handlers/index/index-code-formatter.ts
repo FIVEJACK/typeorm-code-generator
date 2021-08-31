@@ -8,6 +8,7 @@ export class IndexCodeFormatter {
         for (const tableIndex of tableIndices) {
             const typeormIndex = {
                 name: tableIndex.name,
+                isUnique: tableIndex.isUnique,
                 columnNames: tableIndex.columnNames,
             };
             let typeormIndexString = JSON.stringify(typeormIndex);

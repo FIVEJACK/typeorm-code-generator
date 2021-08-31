@@ -32,10 +32,15 @@ export class SqlParser implements ISqlParser {
 
     public getIndices(): TableIndex[] {
         this.tableIndices = [];
-
         const indexASTs = this.getIndexASTs();
+        const constraintASTs = this.getConstraintASTs();
+
         for (const indexAST of indexASTs) {
             this.addToTableIndices(indexAST);
+        }
+
+        for (const constraintAST of constraintASTs) {
+            this.addToTableUniqueIndices(constraintAST);
         }
 
         return this.tableIndices;
@@ -110,5 +115,20 @@ export class SqlParser implements ISqlParser {
         };
 
         this.tableIndices.push(tableIndex);
+    }
+
+    private addToTableUniqueIndices(constraintAST: any) {
+        if (constraintAST.constraint_type === 'unique key') {
+            const tableName = this.ast.table[0].table;
+
+            const tableIndex: TableIndex = {
+                table: tableName,
+                name: constraintAST.index,
+                isUnique: true,
+                columnNames: constraintAST.definition.slice(),
+            };
+
+            this.tableIndices.push(tableIndex);
+        }
     }
 }
