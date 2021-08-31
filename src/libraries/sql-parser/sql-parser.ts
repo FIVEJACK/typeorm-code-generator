@@ -5,6 +5,7 @@ import { ISqlParser } from './isql-parser';
 
 export class SqlParser implements ISqlParser {
     private ast: any;
+    private columnMap: Map<string, TypeormColumn>;
 
     constructor(sql: string) {
         const parser = new Parser();
@@ -12,55 +13,19 @@ export class SqlParser implements ISqlParser {
     }
 
     public getColumns(): TypeormColumn[] {
-        const columnMap: Map<string, TypeormColumn> = new Map();
+        this.columnMap = new Map();
         const columnASTs = this.getColumnASTs();
+        const constraintASTs = this.getConstraintASTs();
 
         for (const columnAST of columnASTs) {
-            const typeormColumn: TypeormColumn = {
-                name: columnAST.column.column,
-                type: columnAST.definition.dataType.toLowerCase(),
-            };
-
-            // Set width for int type, and length for varchar type
-            if (isInteger(typeormColumn.type)) typeormColumn.width = columnAST.definition.length;
-            if (isVarchar(typeormColumn.type)) typeormColumn.length = columnAST.definition.length.toString();
-
-            // Set unsigned property
-            if (columnAST.definition.suffix?.includes('UNSIGNED')) typeormColumn.unsigned = true;
-
-            // Set isNullable property
-            if (columnAST.nullable == undefined) typeormColumn.isNullable = true;
-
-            // Set isGenerated and generationStrategy property
-            if (columnAST.auto_increment === 'auto_increment') {
-                typeormColumn.isGenerated = true;
-                typeormColumn.generationStrategy = 'increment';
-            }
-
-            // Set default property
-            if (columnAST.default_val?.value?.value != undefined) {
-                let defaultValue = columnAST.default_val.value.value.toUpperCase();
-                if (isInteger(typeormColumn.type)) defaultValue = +defaultValue;
-                if (isDateTime(typeormColumn.type) && defaultValue === 'CURRENT_TIMESTAMP') {
-                    defaultValue = defaultValue + '()';
-                }
-
-                typeormColumn.default = defaultValue;
-            }
-
-            // Set comment property
-            if (columnAST.comment != undefined) typeormColumn.comment = columnAST.comment.value?.value;
-
-            columnMap.set(typeormColumn.name, typeormColumn);
+            this.getColumn(columnAST);
         }
 
-        const constraintASTs = this.getConstraintASTs();
         for (const constraintAST of constraintASTs) {
-            const typeormColumn = columnMap.get(constraintAST.definition[0]);
-            if (constraintAST.constraint_type === 'primary key') typeormColumn.isPrimary = true;
+            this.updateColumnConstraint(constraintAST);
         }
 
-        return Array.from(columnMap.values());
+        return Array.from(this.columnMap.values());
     }
 
     private getColumnASTs() {
@@ -69,5 +34,52 @@ export class SqlParser implements ISqlParser {
 
     private getConstraintASTs() {
         return this.ast.create_definitions.filter((definition) => definition.resource === 'constraint');
+    }
+
+    private getColumn(columnAST: any) {
+        const typeormColumn: TypeormColumn = {
+            name: columnAST.column.column,
+            type: columnAST.definition.dataType.toLowerCase(),
+        };
+
+        // Set width for int type, and length for varchar type
+        if (isInteger(typeormColumn.type)) typeormColumn.width = columnAST.definition.length;
+        if (isVarchar(typeormColumn.type)) typeormColumn.length = columnAST.definition.length.toString();
+
+        // Set unsigned property
+        if (columnAST.definition.suffix?.includes('UNSIGNED')) typeormColumn.unsigned = true;
+
+        // Set isNullable property
+        if (columnAST.nullable == undefined) typeormColumn.isNullable = true;
+
+        // Set isGenerated and generationStrategy property
+        if (columnAST.auto_increment === 'auto_increment') {
+            typeormColumn.isGenerated = true;
+            typeormColumn.generationStrategy = 'increment';
+        }
+
+        // Set default property
+        if (columnAST.default_val?.value?.value != undefined) {
+            let defaultValue = columnAST.default_val.value.value.toUpperCase();
+            if (isInteger(typeormColumn.type)) defaultValue = +defaultValue;
+            if (isDateTime(typeormColumn.type) && defaultValue === 'CURRENT_TIMESTAMP') {
+                defaultValue = defaultValue + '()';
+            }
+
+            typeormColumn.default = defaultValue;
+        }
+
+        // Set comment property
+        if (columnAST.comment != undefined) typeormColumn.comment = columnAST.comment.value?.value;
+
+        this.columnMap.set(typeormColumn.name, typeormColumn);
+    }
+
+    private updateColumnConstraint(constraintAST: any) {
+        const typeormColumn = this.columnMap.get(constraintAST.definition[0]);
+
+        if (constraintAST.constraint_type === 'primary key') {
+            typeormColumn.isPrimary = true;
+        }
     }
 }
