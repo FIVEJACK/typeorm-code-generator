@@ -2,10 +2,12 @@ import { Parser } from 'node-sql-parser';
 import { isDateTime, isInteger, isVarchar } from '../../helpers/sqlHelper';
 import { TypeormColumn } from '../../handlers/column/interfaces';
 import { ISqlParser } from './isql-parser';
+import { TableIndex } from 'src/handlers/index/interfaces';
 
 export class SqlParser implements ISqlParser {
     private ast: any;
     private columnMap: Map<string, TypeormColumn>;
+    private tableIndices: TableIndex[];
 
     constructor(sql: string) {
         const parser = new Parser();
@@ -18,7 +20,7 @@ export class SqlParser implements ISqlParser {
         const constraintASTs = this.getConstraintASTs();
 
         for (const columnAST of columnASTs) {
-            this.getColumn(columnAST);
+            this.addToColumnMap(columnAST);
         }
 
         for (const constraintAST of constraintASTs) {
@@ -26,6 +28,17 @@ export class SqlParser implements ISqlParser {
         }
 
         return Array.from(this.columnMap.values());
+    }
+
+    public getIndices(): TableIndex[] {
+        this.tableIndices = [];
+
+        const indexASTs = this.getIndexASTs();
+        for (const indexAST of indexASTs) {
+            this.addToTableIndices(indexAST);
+        }
+
+        return this.tableIndices;
     }
 
     private getColumnASTs() {
@@ -36,7 +49,11 @@ export class SqlParser implements ISqlParser {
         return this.ast.create_definitions.filter((definition) => definition.resource === 'constraint');
     }
 
-    private getColumn(columnAST: any) {
+    private getIndexASTs() {
+        return this.ast.create_definitions.filter((definition) => definition.resource === 'index');
+    }
+
+    private addToColumnMap(columnAST: any) {
         const typeormColumn: TypeormColumn = {
             name: columnAST.column.column,
             type: columnAST.definition.dataType.toLowerCase(),
@@ -81,5 +98,17 @@ export class SqlParser implements ISqlParser {
         if (constraintAST.constraint_type === 'primary key') {
             typeormColumn.isPrimary = true;
         }
+    }
+
+    private addToTableIndices(indexAST: any) {
+        const tableName = this.ast.table[0].table;
+
+        const tableIndex: TableIndex = {
+            table: tableName,
+            name: indexAST.index,
+            columnNames: indexAST.definition.slice(),
+        };
+
+        this.tableIndices.push(tableIndex);
     }
 }
