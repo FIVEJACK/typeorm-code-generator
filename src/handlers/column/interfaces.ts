@@ -10,4 +10,5 @@ export interface TypeormColumn {
     length?: string;
     width?: number;
     default?: number | string;
+    comment?: string;
 }

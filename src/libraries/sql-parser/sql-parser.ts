@@ -48,6 +48,9 @@ export class SqlParser implements ISqlParser {
                 typeormColumn.default = defaultValue;
             }
 
+            // Set comment property
+            if (columnAST.comment != undefined) typeormColumn.comment = columnAST.comment.value?.value;
+
             columnMap.set(typeormColumn.name, typeormColumn);
         }
 
