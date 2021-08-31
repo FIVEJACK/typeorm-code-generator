@@ -16,7 +16,7 @@ export class ColumnCodeGenerator {
             const typeOrmColumns = this.generateColumns(sql);
             this.writeCodeFile(outputFilename, typeOrmColumns);
 
-            console.log('Code generation succeeded');
+            console.log('Code generation succeeded:', outputFilename);
         } catch (error) {
             console.log('Error generating column code:', error);
         }

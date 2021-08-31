@@ -11,11 +11,16 @@ const argv = yargs
             alias: 'i',
             type: 'string',
         },
+        output: {
+            description: 'Generated output file',
+            alias: 'o',
+            type: 'string',
+        },
     })
     .help()
     .alias('help', 'h').argv as any;
 
 if (argv._.includes('column')) {
     const columnGenerator = new ColumnCodeGenerator(argv.input);
-    columnGenerator.generateCodeFile();
+    columnGenerator.generateCodeFile(argv.output);
 }
