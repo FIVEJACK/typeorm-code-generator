@@ -15,8 +15,6 @@ export class SqlParser implements ISqlParser {
         const columnMap: Map<string, TypeormColumn> = new Map();
         const columnASTs = this.getColumnASTs();
 
-        console.log(columnASTs);
-
         for (const columnAST of columnASTs) {
             const typeormColumn: TypeormColumn = {
                 name: columnAST.column.column,
