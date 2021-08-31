@@ -1,38 +1,32 @@
-import fs from 'fs';
-import { SqlParser } from '../../libraries/sql-parser/sql-parser';
-import { IndexCodeFormatter } from './index-code-formatter';
+import prettier from 'prettier';
+import { CodeGenerator } from '../code-generator';
 import { TableIndex } from './interfaces';
 
-export class IndexCodeGenerator {
-    private inputFilename: string;
+export class IndexCodeGenerator implements CodeGenerator<TableIndex> {
+    public generate(tableIndices: TableIndex[]): string {
+        let generatedCode: string = '';
 
-    constructor(inputFilename: string) {
-        this.inputFilename = inputFilename;
-    }
+        for (const tableIndex of tableIndices) {
+            const typeormIndex = {
+                name: tableIndex.name,
+                isUnique: tableIndex.isUnique,
+                columnNames: tableIndex.columnNames,
+            };
+            let typeormIndexString = JSON.stringify(typeormIndex);
+            typeormIndexString = typeormIndexString.replace(/"([^"]+)":/g, '$1:');
 
-    public generateCodeFile(outputFilename = 'output.ts'): void {
-        try {
-            const sql = this.readFileSync();
-            const tableIndices = this.generateIndices(sql);
-            this.writeCodeFile(outputFilename, tableIndices);
-
-            console.log('Code generation succeeded:', outputFilename);
-        } catch (error) {
-            console.log('Error generating index code:', error);
+            generatedCode += `await queryRunner.createIndex('${tableIndex.table}', new TableIndex(${typeormIndexString}));\n\n`;
         }
-    }
 
-    private readFileSync(): string {
-        return fs.readFileSync(this.inputFilename, 'utf-8');
-    }
-
-    private generateIndices(sql: string): TableIndex[] {
-        const sqlParser = new SqlParser(sql);
-        return sqlParser.getIndices();
-    }
-
-    private writeCodeFile(outputFilename: string, tableIndices: TableIndex[]) {
-        const outputString = IndexCodeFormatter.format(tableIndices);
-        fs.writeFileSync(outputFilename, outputString);
+        return prettier.format(generatedCode, {
+            tabWidth: 4,
+            printWidth: 120,
+            parser: 'babel',
+            bracketSpacing: true,
+            jsxBracketSameLine: true,
+            singleQuote: true,
+            trailingComma: 'all',
+            semi: true,
+        });
     }
 }

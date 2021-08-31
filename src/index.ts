@@ -1,8 +1,8 @@
 #! /usr/bin/env node
 
-import { ColumnCodeGenerator } from './handlers/column/column-code-generator';
+import { ColumnCodeFileGenerator } from './handlers/column/column-code-file-generator';
 import yargs from 'yargs';
-import { IndexCodeGenerator } from './handlers/index/index-code-generator';
+import { IndexCodeFileGenerator } from './handlers/index/index-code-file-generator';
 
 const argv = yargs
     .usage('\nUsage: typeorm-generate <command>')
@@ -34,11 +34,11 @@ const argv = yargs
     .alias('help', 'h').argv as any;
 
 if (argv._.includes('column')) {
-    const columnGenerator = new ColumnCodeGenerator(argv.input);
+    const columnGenerator = new ColumnCodeFileGenerator(argv.input);
     columnGenerator.generateCodeFile(argv.output);
 }
 
 if (argv._.includes('index')) {
-    const indexGenerator = new IndexCodeGenerator(argv.input);
+    const indexGenerator = new IndexCodeFileGenerator(argv.input);
     indexGenerator.generateCodeFile(argv.output);
 }

@@ -1,38 +1,21 @@
-import fs from 'fs';
-import { SqlParser } from '../../libraries/sql-parser/sql-parser';
-import { ColumnCodeFormatter } from './column-code-formatter';
 import { TypeormColumn } from './interfaces';
+import prettier from 'prettier';
+import { CodeGenerator } from '../code-generator';
 
-export class ColumnCodeGenerator {
-    private inputFilename: string;
+export class ColumnCodeGenerator implements CodeGenerator<TypeormColumn> {
+    public generate(columns: TypeormColumn[]): string {
+        const jsonString = JSON.stringify(columns);
+        let formattedJson = jsonString.replace(/"([^"]+)":/g, '$1:');
 
-    constructor(inputFilename: string) {
-        this.inputFilename = inputFilename;
-    }
-
-    public generateCodeFile(outputFilename = 'output.ts'): void {
-        try {
-            const sql = this.readFileSync();
-            const typeOrmColumns = this.generateColumns(sql);
-            this.writeCodeFile(outputFilename, typeOrmColumns);
-
-            console.log('Code generation succeeded:', outputFilename);
-        } catch (error) {
-            console.log('Error generating column code:', error);
-        }
-    }
-
-    private readFileSync(): string {
-        return fs.readFileSync(this.inputFilename, 'utf-8');
-    }
-
-    private generateColumns(sql: string): TypeormColumn[] {
-        const sqlParser = new SqlParser(sql);
-        return sqlParser.getColumns();
-    }
-
-    private writeCodeFile(outputFilename: string, typeOrmColumns: TypeormColumn[]) {
-        const outputString = ColumnCodeFormatter.format(typeOrmColumns);
-        fs.writeFileSync(outputFilename, outputString);
+        return prettier.format(formattedJson, {
+            tabWidth: 4,
+            printWidth: 120,
+            parser: 'babel',
+            bracketSpacing: true,
+            jsxBracketSameLine: true,
+            singleQuote: true,
+            trailingComma: 'all',
+            semi: true,
+        });
     }
 }
