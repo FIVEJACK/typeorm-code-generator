@@ -9,7 +9,7 @@ export abstract class CodeFileGenerator<T> {
         this.inputFilename = inputFilename;
     }
 
-    public generateCodeFile(outputFilename: string): void {
+    public generateCodeFile(outputFilename: string = 'output.ts'): void {
         try {
             const sql = this.readFileSync();
             const data = this.generateData(sql);
