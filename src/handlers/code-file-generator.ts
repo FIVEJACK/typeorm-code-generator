@@ -26,7 +26,7 @@ export abstract class CodeFileGenerator<T> {
         return fs.readFileSync(this.inputFilename, 'utf-8');
     }
 
-    protected abstract generateData(sql: string): T[];
+    protected abstract generateData(sql: string): T[] | T;
 
     protected writeFileSync(outputFilename: string, data: string) {
         fs.writeFileSync(outputFilename, data);

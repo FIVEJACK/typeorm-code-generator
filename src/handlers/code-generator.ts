@@ -1,3 +1,3 @@
 export interface CodeGenerator<T> {
-    generate(data: T[]): string;
+    generate(data: T[] | T): string;
 }
