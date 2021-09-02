@@ -1,12 +1,12 @@
 import { Parser } from 'node-sql-parser';
 import { isDateTime, isInteger, isVarchar } from '../../helpers/sqlHelper';
-import { TypeormColumn } from '../../handlers/column/interfaces';
+import { TableColumn } from '../../handlers/column/table-column';
 import { ISqlParser } from './isql-parser';
-import { TableIndex } from 'src/handlers/index/interfaces';
+import { TableIndex } from 'src/handlers/index/table-index';
 
 export class SqlParser implements ISqlParser {
     private ast: any;
-    private columnMap: Map<string, TypeormColumn>;
+    private columnMap: Map<string, TableColumn>;
     private tableIndices: TableIndex[];
 
     constructor(sql: string) {
@@ -14,7 +14,7 @@ export class SqlParser implements ISqlParser {
         this.ast = parser.astify(sql);
     }
 
-    public getColumns(): TypeormColumn[] {
+    public getColumns(): TableColumn[] {
         this.columnMap = new Map();
         const columnASTs = this.getColumnASTs();
         const constraintASTs = this.getConstraintASTs();
@@ -59,7 +59,7 @@ export class SqlParser implements ISqlParser {
     }
 
     private addToColumnMap(columnAST: any) {
-        const typeormColumn: TypeormColumn = {
+        const typeormColumn: TableColumn = {
             name: columnAST.column.column,
             type: columnAST.definition.dataType.toLowerCase(),
         };

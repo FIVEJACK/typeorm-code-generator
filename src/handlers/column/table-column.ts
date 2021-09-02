@@ -1,4 +1,4 @@
-export interface TypeormColumn {
+export interface TableColumn {
     name: string;
     type: string;
     isPrimary?: boolean;

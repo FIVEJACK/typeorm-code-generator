@@ -1,9 +1,9 @@
-import { TypeormColumn } from './interfaces';
+import { TableColumn } from './table-column';
 import prettier from 'prettier';
 import { CodeGenerator } from '../code-generator';
 
-export class ColumnCodeGenerator implements CodeGenerator<TypeormColumn> {
-    public generate(columns: TypeormColumn[]): string {
+export class ColumnCodeGenerator implements CodeGenerator<TableColumn> {
+    public generate(columns: TableColumn[]): string {
         const jsonString = JSON.stringify(columns);
         let formattedJson = jsonString.replace(/"([^"]+)":/g, '$1:');
 

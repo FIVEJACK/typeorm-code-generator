@@ -1,6 +1,6 @@
 import prettier from 'prettier';
 import { CodeGenerator } from '../code-generator';
-import { TableIndex } from './interfaces';
+import { TableIndex } from './table-index';
 
 export class IndexCodeGenerator implements CodeGenerator<TableIndex> {
     public generate(tableIndices: TableIndex[]): string {

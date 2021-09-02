@@ -1,7 +1,7 @@
 import { SqlParser } from '../../libraries/sql-parser/sql-parser';
 import { CodeFileGenerator } from '../code-file-generator';
 import { IndexCodeGenerator } from './index-code-generator';
-import { TableIndex } from './interfaces';
+import { TableIndex } from './table-index';
 
 export class IndexCodeFileGenerator extends CodeFileGenerator<TableIndex> {
     constructor(inputFilename: string) {
