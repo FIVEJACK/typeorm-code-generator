@@ -16,6 +16,10 @@ Make sure you have these installed in your computer for development
 1. yarn build
 2. npm install -g typeorm-code-generator
 
+## How to Generate Migration Code
+
+run in git bash terminal: 'typeorm-generate migration:create -i <input_sql_file> -n <migration_name>'
+
 ## How to Generate Columns Code Segment
 
 run in git bash terminal: 'typeorm-generate migration:column -i <input_sql_file> -o <output_file>'
