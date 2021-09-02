@@ -1,9 +1,10 @@
 import prettier from 'prettier';
+import { formatConfig } from '../../config/format';
 import { CodeGenerator } from '../code-generator';
 import { TableIndex } from './table-index';
 
 export class IndexCodeGenerator implements CodeGenerator<TableIndex> {
-    public generate(tableIndices: TableIndex[]): string {
+    public generateCode(tableIndices: TableIndex[]): string {
         let generatedCode: string = '';
 
         for (const tableIndex of tableIndices) {
@@ -18,15 +19,11 @@ export class IndexCodeGenerator implements CodeGenerator<TableIndex> {
             generatedCode += `await queryRunner.createIndex('${tableIndex.table}', new TableIndex(${typeormIndexString}));\n\n`;
         }
 
-        return prettier.format(generatedCode, {
-            tabWidth: 4,
-            printWidth: 120,
-            parser: 'babel',
-            bracketSpacing: true,
-            jsxBracketSameLine: true,
-            singleQuote: true,
-            trailingComma: 'all',
-            semi: true,
-        });
+        return generatedCode;
+    }
+
+    public generateFormatedCode(tableIndices: TableIndex[]): string {
+        let code = this.generateCode(tableIndices);
+        return prettier.format(code, formatConfig);
     }
 }

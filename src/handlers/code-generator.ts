@@ -1,3 +1,4 @@
 export interface CodeGenerator<T> {
-    generate(data: T[] | T): string;
+    generateCode(data: T[] | T): string;
+    generateFormatedCode(data: T[] | T): string;
 }

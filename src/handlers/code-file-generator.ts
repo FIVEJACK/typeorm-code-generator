@@ -13,7 +13,7 @@ export abstract class CodeFileGenerator<T> {
         try {
             const sql = this.readFileSync();
             const data = this.generateData(sql);
-            const code = this.codeGenerator.generate(data);
+            const code = this.codeGenerator.generateFormatedCode(data);
             this.writeFileSync(outputFilename, code);
 
             console.log('Code generation succeeded:', outputFilename);

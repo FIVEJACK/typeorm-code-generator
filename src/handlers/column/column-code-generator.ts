@@ -1,21 +1,16 @@
-import { TableColumn } from './table-column';
 import prettier from 'prettier';
+import { TableColumn } from './table-column';
 import { CodeGenerator } from '../code-generator';
+import { formatConfig } from '../../config/format';
 
 export class ColumnCodeGenerator implements CodeGenerator<TableColumn> {
-    public generate(columns: TableColumn[]): string {
+    public generateCode(columns: TableColumn[]): string {
         const jsonString = JSON.stringify(columns);
-        let formattedJson = jsonString.replace(/"([^"]+)":/g, '$1:');
+        return jsonString.replace(/"([^"]+)":/g, '$1:');
+    }
 
-        return prettier.format(formattedJson, {
-            tabWidth: 4,
-            printWidth: 120,
-            parser: 'babel',
-            bracketSpacing: true,
-            jsxBracketSameLine: true,
-            singleQuote: true,
-            trailingComma: 'all',
-            semi: true,
-        });
+    public generateFormatedCode(columns: TableColumn[]): string {
+        const code = this.generateCode(columns);
+        return prettier.format(code, formatConfig);
     }
 }

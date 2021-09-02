@@ -47,7 +47,7 @@ const argv = yargs
     .alias('help', 'h').argv as any;
 
 if (argv._.includes('migration:create')) {
-    const migrationGenerator = new MigrationCodeFileGenerator(argv.input);
+    const migrationGenerator = new MigrationCodeFileGenerator(argv.input, argv.name);
     migrationGenerator.generateCodeFile(argv.name);
 }
 

@@ -5,9 +5,14 @@ import { Migration } from './migration';
 import { MigrationCodeGenerator } from './migration-code-generator';
 
 export class MigrationCodeFileGenerator extends CodeFileGenerator<Migration> {
-    constructor(inputFilename: string) {
+    private outputFileName: string;
+    private timestamp: number;
+
+    constructor(inputFilename: string, outputFileName: string) {
         super(inputFilename);
 
+        this.outputFileName = outputFileName;
+        this.timestamp = new Date().getTime();
         this.codeGenerator = new MigrationCodeGenerator();
     }
 
@@ -15,14 +20,15 @@ export class MigrationCodeFileGenerator extends CodeFileGenerator<Migration> {
         const sqlParser = new SqlParser(sql);
 
         return {
+            fileName: this.outputFileName + this.timestamp,
+            tableName: sqlParser.getTableName(),
             columns: sqlParser.getColumns(),
             indices: sqlParser.getIndices(),
         } as Migration;
     }
 
     protected writeFileSync(outputFilename: string, data: string) {
-        const timestamp = new Date().getTime();
-        const path = `./database/migrations/${timestamp}-${outputFilename}.ts`;
+        const path = `./database/migrations/${this.timestamp}-${outputFilename}.ts`;
 
         fs.writeFileSync(path, data);
     }
