@@ -6,7 +6,14 @@ import { IndexCodeFileGenerator } from './handlers/index/index-code-file-generat
 
 const argv = yargs
     .usage('\nUsage: typeorm-generate <command>')
-    .command('column', 'Generate columns code', {
+    .command('migration:create', 'Generate columns code', {
+        input: {
+            description: 'The SQL input file',
+            alias: 'i',
+            type: 'string',
+        },
+    })
+    .command('migration:column', 'Generate columns code', {
         input: {
             description: 'The SQL input file',
             alias: 'i',
@@ -18,7 +25,7 @@ const argv = yargs
             type: 'string',
         },
     })
-    .command('index', 'Generate indices code', {
+    .command('migration:index', 'Generate indices code', {
         input: {
             description: 'The SQL input file',
             alias: 'i',
@@ -33,12 +40,17 @@ const argv = yargs
     .help()
     .alias('help', 'h').argv as any;
 
-if (argv._.includes('column')) {
+if (argv._.includes('migration:create')) {
+    const migrationGenerator = new MigrationCodeFileGenerator(argv.input);
+    migrationGenerator.generateCodeFile();
+}
+
+if (argv._.includes('migration:column')) {
     const columnGenerator = new ColumnCodeFileGenerator(argv.input);
     columnGenerator.generateCodeFile(argv.output);
 }
 
-if (argv._.includes('index')) {
+if (argv._.includes('migration:index')) {
     const indexGenerator = new IndexCodeFileGenerator(argv.input);
     indexGenerator.generateCodeFile(argv.output);
 }

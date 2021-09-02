@@ -18,8 +18,8 @@ Make sure you have these installed in your computer for development
 
 ## How to Generate Columns Code Segment
 
-run in git bash terminal: 'typeorm-generate column -i <input_sql_file> -o <output_file>'
+run in git bash terminal: 'typeorm-generate migration:column -i <input_sql_file> -o <output_file>'
 
 ## How to Generate Indices Code Segment
 
-run in git bash terminal: 'typeorm-generate index -i <input_sql_file> -o <output_file>'
+run in git bash terminal: 'typeorm-generate migration:index -i <input_sql_file> -o <output_file>'
