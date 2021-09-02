@@ -1,4 +1,8 @@
+import { TableColumn } from 'src/handlers/column/table-column';
+import { TableIndex } from 'src/handlers/index/table-index';
+
 export interface ISqlParser {
-    getColumns();
-    getIndices();
+    getTableName(): string;
+    getColumns(): TableColumn[];
+    getIndices(): TableIndex[];
 }

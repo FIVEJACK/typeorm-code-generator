@@ -14,6 +14,10 @@ export class SqlParser implements ISqlParser {
         this.ast = parser.astify(sql);
     }
 
+    public getTableName(): string {
+        return this.ast.table[0].table;
+    }
+
     public getColumns(): TableColumn[] {
         this.columnMap = new Map();
         const columnASTs = this.getColumnASTs();
@@ -106,10 +110,8 @@ export class SqlParser implements ISqlParser {
     }
 
     private addToTableIndices(indexAST: any) {
-        const tableName = this.ast.table[0].table;
-
         const tableIndex: TableIndex = {
-            table: tableName,
+            table: this.getTableName(),
             name: indexAST.index,
             columnNames: indexAST.definition.slice(),
         };
@@ -119,10 +121,8 @@ export class SqlParser implements ISqlParser {
 
     private addToTableUniqueIndices(constraintAST: any) {
         if (constraintAST.constraint_type === 'unique key') {
-            const tableName = this.ast.table[0].table;
-
             const tableIndex: TableIndex = {
-                table: tableName,
+                table: this.getTableName(),
                 name: constraintAST.index,
                 isUnique: true,
                 columnNames: constraintAST.definition.slice(),
