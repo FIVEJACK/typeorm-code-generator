@@ -14,6 +14,7 @@
     "author": "PT. Five Jack",
     "license": "ISC",
     "devDependencies": {
+        "@types/lodash": "^4.14.172",
         "@types/node": "^16.7.6",
         "@types/prettier": "^2.3.2",
         "@types/yargs": "^17.0.2",
@@ -22,6 +23,7 @@
         "typescript": "^4.4.2"
     },
     "dependencies": {
+        "lodash": "^4.17.21",
         "node-sql-parser": "^3.6.5",
         "prettier": "^2.3.2",
         "yargs": "^17.1.1"
