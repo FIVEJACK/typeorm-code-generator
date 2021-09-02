@@ -1,12 +1,10 @@
-import prettier from 'prettier';
-import { formatConfig } from '../../config/format';
 import { toCamelCase } from '../../helpers/utility';
 import { CodeGenerator } from '../code-generator';
 import { ColumnCodeGenerator } from '../column/column-code-generator';
 import { IndexCodeGenerator } from '../index/index-code-generator';
 import { Migration } from './migration';
 
-export class MigrationCodeGenerator implements CodeGenerator<Migration> {
+export class MigrationCodeGenerator extends CodeGenerator<Migration> {
     public generateCode(migration: Migration): string {
         const hasIndex = migration.indices.length > 1;
         const className = toCamelCase(migration.fileName);
@@ -41,10 +39,5 @@ export class MigrationCodeGenerator implements CodeGenerator<Migration> {
                 }
             }
         `;
-    }
-
-    public generateFormatedCode(migration: Migration): string {
-        const code = this.generateCode(migration);
-        return prettier.format(code, formatConfig);
     }
 }

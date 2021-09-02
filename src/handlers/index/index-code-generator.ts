@@ -1,9 +1,7 @@
-import prettier from 'prettier';
-import { formatConfig } from '../../config/format';
 import { CodeGenerator } from '../code-generator';
 import { TableIndex } from './table-index';
 
-export class IndexCodeGenerator implements CodeGenerator<TableIndex> {
+export class IndexCodeGenerator extends CodeGenerator<TableIndex> {
     public generateCode(tableIndices: TableIndex[]): string {
         let generatedCode: string = '';
 
@@ -20,10 +18,5 @@ export class IndexCodeGenerator implements CodeGenerator<TableIndex> {
         }
 
         return generatedCode;
-    }
-
-    public generateFormatedCode(tableIndices: TableIndex[]): string {
-        let code = this.generateCode(tableIndices);
-        return prettier.format(code, formatConfig);
     }
 }
