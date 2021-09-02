@@ -3,6 +3,7 @@
 import { ColumnCodeFileGenerator } from './handlers/column/column-code-file-generator';
 import yargs from 'yargs';
 import { IndexCodeFileGenerator } from './handlers/index/index-code-file-generator';
+import { MigrationCodeFileGenerator } from './handlers/migration/migration-code-file-generator';
 
 const argv = yargs
     .usage('\nUsage: typeorm-generate <command>')
@@ -10,6 +11,11 @@ const argv = yargs
         input: {
             description: 'The SQL input file',
             alias: 'i',
+            type: 'string',
+        },
+        name: {
+            description: 'Migration file name',
+            alias: 'n',
             type: 'string',
         },
     })
@@ -42,7 +48,7 @@ const argv = yargs
 
 if (argv._.includes('migration:create')) {
     const migrationGenerator = new MigrationCodeFileGenerator(argv.input);
-    migrationGenerator.generateCodeFile();
+    migrationGenerator.generateCodeFile(argv.name);
 }
 
 if (argv._.includes('migration:column')) {
