@@ -14,7 +14,7 @@ Make sure you have these installed in your computer for development
 ## How to Install
 
 1. yarn build (if you clone the project and want to build locally)
-2. npm install -g typeorm-code-generator
+2. npm install -g @itemku/typeorm-code-generator
 
 ## How to Generate Migration Code
 

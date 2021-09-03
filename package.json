@@ -1,5 +1,5 @@
 {
-    "name": "typeorm-code-generator",
+    "name": "@itemku/typeorm-code-generator",
     "version": "0.1.0",
     "description": "From SQL Statement to typeorm migration code in typescript",
     "main": "dist/index.js",
