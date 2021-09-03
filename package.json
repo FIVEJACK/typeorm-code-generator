@@ -1,6 +1,6 @@
 {
     "name": "typeorm-code-generator",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "description": "From SQL Statement to typeorm migration code in typescript",
     "main": "dist/index.js",
     "bin": {
@@ -11,8 +11,8 @@
         "start-dev": "ts-node src/index.ts",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "author": "PT. Five Jack",
-    "license": "ISC",
+    "author": "Henry (henry@fivejack.com)",
+    "license": "MIT",
     "devDependencies": {
         "@types/lodash": "^4.14.172",
         "@types/node": "^16.7.6",
